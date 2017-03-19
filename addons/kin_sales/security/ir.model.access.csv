@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_shipping_term_sales_man,sale.shipping.term sales order,kin_sales.model_sale_shipping_term,base.group_sale_salesman,1,1,1,1
+access_account_payment_term_sale_user,account.payment.term sales order,account.model_account_payment_term,base.group_sale_salesman,1,1,1,1
+access_account_payment_term_line_sale_user,account.payment.term.line sales order,account.model_account_payment_term_line,base.group_sale_salesman,1,1,1,1

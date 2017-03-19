@@ -1,0 +1,302 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+
+from openerp import api, fields, models, _
+from urllib import urlencode
+from urlparse import urljoin
+
+
+class SaleOrderExtend(models.Model):
+    _inherit = 'sale.order'
+
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        res = super(SaleOrderExtend, self).copy(default)
+        res.onchange_reach_limit()
+        return res
+
+    @api.multi
+    def action_disapprove(self,msg):
+        reason_for_dispproval = msg
+        self.disapproved_by_user_id = self.env.user
+        self.state = 'no_sale'
+
+        # Send Email
+        company_email = self.env.user.company_id.email.strip()
+        disapprove_person_email = self.disapproved_by_user_id.partner_id.email.strip()
+        disapprove_person_name = self.disapproved_by_user_id.name
+
+        if company_email and disapprove_person_email:
+            # Custom Email Template
+            mail_template = self.env.ref('kin_sales_double_validation.mail_templ_sale_disapproved')
+            ctx = {}
+            ctx.update({'sale_id': self.id})
+            the_url = self._get_sale_order_url('sale', 'menu_sale_order', 'action_orders', ctx)
+
+            user_ids = []
+            group_obj = self.env.ref('kin_sales_double_validation.group_receive_disapprove_sale_order_email')
+            for user in group_obj.users:
+                if user.partner_id.email and user.partner_id.email.strip():
+                    user_ids.append(user.id)
+                    ctx = {'system_email': company_email,
+                           'disapprove_person_name': disapprove_person_name,
+                           'disapprove_person_email': disapprove_person_email,
+                           'notify_person_email': user.partner_id.email,
+                           'notify_person_name': user.partner_id.name,
+                           'url': the_url,
+                           'reason_for_dispproval': reason_for_dispproval,
+                           }
+                    mail_template.with_context(ctx).send_mail(self.id, force_send=False)
+
+            if user_ids :
+                self.message_subscribe_users(user_ids=user_ids)
+                # For Similar Odoo Kind of Email. Works fine
+                #self.message_post( _("Sales Order has been Disapproved with reason: " + reason_for_dispproval + "") ,subject='Please See the Disapproved Sales Order', subtype='mail.mt_comment')
+
+                #Just Log the Note Only
+                self.message_post(_("Sales Order has been Disapproved with reason: " + reason_for_dispproval + ""), subject='Please See the Disapproved Sales Order')
+
+    @api.multi
+    def action_approve(self):
+        res = super(SaleOrderExtend, self).action_confirm()
+        self.approved_by_user_id = self.env.user
+
+        # Send Email
+        company_email = self.env.user.company_id.email.strip()
+        approve_person_email = self.approved_by_user_id.partner_id.email.strip()
+        approve_person_name = self.approved_by_user_id.name
+
+        if company_email and approve_person_email:
+            # Custom Email Template
+            mail_template = self.env.ref('kin_sales_double_validation.mail_templ_sale_approved')
+            ctx = {}
+            ctx.update({'sale_id': self.id})
+            the_url = self._get_sale_order_url('sale', 'menu_sale_order', 'action_orders', ctx)
+
+            user_ids = []
+            group_obj = self.env.ref('kin_sales_double_validation.group_receive_approve_sale_order_email')
+            for user in group_obj.users:
+                if user.partner_id.email and user.partner_id.email.strip():
+                    user_ids.append(user.id)
+                    ctx = {'system_email': company_email,
+                           'approve_person_name': approve_person_name,
+                           'approve_person_email': approve_person_email,
+                           'notify_person_email': user.partner_id.email,
+                           'notify_person_name': user.partner_id.name,
+                           'url': the_url
+                           }
+                    mail_template.with_context(ctx).send_mail(self.id, force_send=False)
+            if user_ids :
+                self.message_subscribe_users(user_ids=user_ids)
+
+        return res
+
+
+    @api.multi
+    def action_confirm(self):
+        self.state = 'so_to_approve'
+        self.confirmed_by_user_id = self.env.user
+
+        # Give a SO ID
+        if self.so_name:
+            self.name = self.so_name
+        else:
+            self.quote_name = self.name
+            self.name = self.env['ir.sequence'].get('so_id_code')
+            self.so_name = self.name
+
+        #Send FYI email notification
+        company_email = self.env.user.company_id.email.strip()
+        confirm_person_email = self.confirmed_by_user_id.partner_id.email.strip()
+        confirm_person_name = self.confirmed_by_user_id.partner_id.name
+
+        if company_email and  confirm_person_email :
+            # Custom Email Template
+            mail_template = self.env.ref('kin_sales_double_validation.mail_templ_quote_confirmed')
+            ctx = {}
+            ctx.update({'sale_id':self.id})
+            the_url = self._get_sale_order_url('sale','menu_sale_order','action_orders',ctx)
+
+            user_ids = []
+            group_obj = self.env.ref('kin_sales_double_validation.group_receive_quotation_confirmed_email')
+            for user in group_obj.users:
+                if user.partner_id.email and user.partner_id.email.strip():
+                    user_ids.append(user.id)
+                    ctx = {
+                            'system_email': company_email,
+                            'confirm_person_name': confirm_person_name ,
+                            'confirm_person_email' :confirm_person_email,
+                            'notify_person_email': user.partner_id.email,
+                            'notify_person_name': user.partner_id.name,
+                            'url':the_url
+                            }
+                    mail_template.with_context(ctx).send_mail(self.id, force_send=False)
+            if user_ids:
+                self.message_subscribe_users(user_ids=user_ids)
+
+            #Send email for approval or disapproval
+            mail_template = self.env.ref('kin_sales_double_validation.mail_templ_quote_confirmed_to_approve')
+            user_ids = []
+            group_obj = self.env.ref('kin_sales_double_validation.group_receive_quotation_confirmed_email_to_approve')
+            for user in group_obj.users:
+                if user.partner_id.email and user.partner_id.email.strip():
+                    user_ids.append(user.id)
+                    ctx = {
+                        'system_email': company_email,
+                        'confirm_person_name': confirm_person_name,
+                        'confirm_person_email': confirm_person_email,
+                        'notify_person_email': user.partner_id.email,
+                        'notify_person_name': user.partner_id.name,
+                        'url': the_url
+                    }
+                    mail_template.with_context(ctx).send_mail(self.id, force_send=False)
+            if user_ids :
+                self.message_subscribe_users(user_ids=user_ids)
+
+        return
+
+    # It acts as a helper for other sub classess to call the parent action_confirm() method
+    @api.multi
+    def action_confirm_subclass(self):
+        res = super(SaleOrderExtend, self).action_confirm()
+
+    @api.multi
+    def action_cancel(self):
+        res = super(SaleOrderExtend,self).action_cancel()
+
+        #Send Email
+        company_email = self.env.user.company_id.email.strip()
+        sales_person_email = self.user_id.partner_id.email.strip()
+        confirm_person_email = self.env.user.partner_id.email.strip()
+
+        if company_email and sales_person_email and confirm_person_email and  (sales_person_email != confirm_person_email ):
+            # Custom Email Template
+            mail_template = self.env.ref('kin_sales_double_validation.mail_templ_sale_canceled')
+            ctx = {}
+            ctx.update({'sale_id':self.id})
+            the_url = self._get_sale_order_url('sale','menu_sale_order','action_orders',ctx)
+
+            ctx = {'system_email': company_email,
+                    'confirm_person_name': self.env.user.name ,
+                    'confirm_person_email' :confirm_person_email,
+                    'url':the_url
+                    }
+            mail_template.with_context(ctx).send_mail(self.id,force_send=False)
+        return res
+
+    def onchange_reach_limit(self):
+        for order in self:
+            amount_total = order.amount_total
+            sale_confirm_limit = self.env.user.sale_confirm_limit
+            is_use_sale_confirm_limit = self.env.user.is_use_sale_confirm_limit
+            if (amount_total <= sale_confirm_limit) and is_use_sale_confirm_limit  and  order.state in ['draft','sent','to_accept']:
+                self.env.cr.execute("update sale_order set state = 'so_to_approve' where id = %s" % (self.id))
+            elif (amount_total > sale_confirm_limit) and is_use_sale_confirm_limit and order.state in ['draft','sent']:
+                self.env.cr.execute("update sale_order set state = 'to_accept' where id = %s" % (self.id))
+        return
+
+    @api.multi
+    def write(self, vals):
+        res = super(SaleOrderExtend, self).write(vals)
+        self.onchange_reach_limit()
+        return res
+
+    @api.model
+    def create(self, vals):
+        order = super(SaleOrderExtend, self).create(vals)
+        return order
+
+    def _get_sale_order_url(self, module_name,menu_id,action_id, context=None):
+        fragment = {}
+        res = {}
+        model_data = self.env['ir.model.data']
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        fragment['menu_id'] = model_data.get_object_reference(module_name,menu_id)[1]
+        fragment['model'] =  'sale.order'
+        fragment['view_type'] = 'form'
+        fragment['action']= model_data.get_object_reference(module_name,action_id)[1]
+        query = {'db': self.env.cr.dbname}
+
+# for displaying tree view. Remove if you want to display form view
+#         fragment['page'] = '0'
+#         fragment['limit'] = '80'
+#         res = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+
+
+ # For displaying a single record. Remove if you want to display tree view
+
+        fragment['id'] =  context.get("sale_id")
+        res = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+        return res
+
+    @api.multi
+    def action_send_for_confirm(self):
+        for order in self:
+            order.state = 'waiting'
+            order.is_show_btn_send_for_confirm = False
+            order.is_show_btn_approve = False
+            order.is_show_btn_confirm = True
+
+            #Send Email
+            company_email = order.env.user.company_id.email.strip()
+            sales_person_email = order.user_id.partner_id.email.strip()
+
+            if company_email and sales_person_email  :
+                # Custom Email Template
+                mail_template = order.env.ref('kin_sales_double_validation.mail_templ_send_for_confirmation')
+                ctx = {}
+                ctx.update({'sale_id':order.id})
+                the_url = order._get_sale_order_url('sale','menu_sale_order','action_orders',ctx)
+
+                user_ids = []
+                group_obj = self.env.ref('kin_sales_double_validation.group_receive_send_for_confirm_email')
+                for user in group_obj.users :
+                    if user.partner_id.email and user.partner_id.email.strip() :
+                        user_ids.append(user.id)
+                        ctx = {'system_email': company_email,
+                                'confirm_person_email':user.partner_id.email,
+                                'confirm_person_name': user.partner_id.name ,
+                                'url':the_url
+                                }
+                        mail_template.with_context(ctx).send_mail(order.id,force_send=False)
+
+                if user_ids :
+                    order.message_subscribe_users(user_ids=user_ids)
+
+                #self.message_post( _('Sales Order has been created %s.') % (self.name),subject='Please See the Created Sales Order', subtype='mail.mt_comment')
+
+
+    #state = fields.Selection(selection_add=[('waiting', 'Waiting Approval')]) # it worked but , i could not sequence it
+    state = fields.Selection([
+        ('draft', 'Quotation'),
+        ('sent', 'Quote Sent'),
+        ('to_accept', 'Quote Awaiting Acceptance'),
+        ('waiting', 'Quote Awaiting Conversion to SO'),
+        ('so_to_approve', 'Sale Order To Approve'),
+        ('sale', 'Sale Order Approved'),
+        ('no_sale', 'Sale Order Disapproved'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+        ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+
+    confirmed_by_user_id = fields.Many2one('res.users',string= 'Confirmed By')
+    approved_by_user_id = fields.Many2one('res.users', string='Approved By')
+    disapproved_by_user_id = fields.Many2one('res.users', string='Disapproved By')
+    date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True,
+                                 states={'draft': [('readonly', False), ('required', False)],
+                                         'sent': [('readonly', False)], 'waiting': [('readonly', False)],
+                                         'so_to_approve': [('readonly', False)]}, copy=False)
+
+
+
+
+class ResUsersExtend(models.Model):
+    _inherit = 'res.users'
+
+    sale_confirm_limit = fields.Float('Sales Confirmation Limit',help='If user exceeds this limit, expose the confirmation button for validation')
+    is_use_sale_confirm_limit = fields.Boolean('Use Sales Confirm Limit')
+
