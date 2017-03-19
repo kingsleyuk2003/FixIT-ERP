@@ -9,7 +9,7 @@
           t-att-data-main-object="repr(main_object) if editable else None">
         <head>
             <meta charset="utf-8" />
-            <title>Odoo Editor layout</title>
+            <title>KinSoft Editor layout</title>
             <meta name="viewport" content="initial-scale=1"/>
             <script type="text/javascript">
                 var snippets_url = '<t t-esc="snippets or ''"/>';
@@ -49,7 +49,7 @@
             </script>
             <t t-raw="head or ''"/>
         </head>
-        <body id="web_editor_inside_iframe" onload="var fn=window.top.odoo &amp;&amp; window.top.odoo[callback+'_content']; if(fn) {fn();} else {console.warn('Please don\'t open iframe without the odoo backend');}">
+        <body id="web_editor_inside_iframe" onload="var fn=window.top.odoo &amp;&amp; window.top.odoo[callback+'_content']; if(fn) {fn();} else {console.warn('Please don\'t open iframe without the KinSoft backend');}">
             <div id="wrapwrap">
                 <main>
                     <t t-raw="0"/>
