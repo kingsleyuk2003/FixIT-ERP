@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <div t-name="EmptyComponent"/>
-<div t-name="Loading" class="oe_loading">Loading...</div>
+<div t-name="Loading" class="oe_loading">Please Wait. The System is Loading...</div>
 <t t-name="Notification">
     <div class="o_notification" t-translation="off">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
@@ -79,12 +79,12 @@
                 <span class="oe_topbar_name"/> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="#" data-menu="documentation">Documentation</a></li>
-                <li><a href="#" data-menu="support">Support</a></li>
+                <!--<li><a href="#" data-menu="documentation">Documentation</a></li>-->
+                <!--<li><a href="#" data-menu="support">Support</a></li>-->
                 <li><a href="#" data-menu="about">About</a></li>
                 <li class="divider"/>
                 <li><a href="#" data-menu="settings">Preferences</a></li>
-                <li><a href="#" data-menu="account">My kinsofterp.com account</a></li>
+                <!--<li><a href="#" data-menu="account">My kinsofterp.com account</a></li>-->
                 <li><a href="#" data-menu="logout">Log out</a></li>
             </ul>
         </li>
@@ -93,18 +93,18 @@
 <div t-name="UserMenu.about" class="oe_about">
     <div class="container-fluid">
         <div class="row">
-            <a class="oe_activate_debug_mode oe_right label label-primary" href="?debug" >Activate the developer mode</a>
+            <a class="oe_activate_debug_mode oe_right label-primary" href="?debug" >Activate the developer mode</a>
         </div>
         <div class="row">
             <div class="col-sm-offset-2 col-md-offset-2 col-sm-8 col-md-8 user-details">
                 <div class="user-image">
-                    <img src="/web/static/src/img/logo2.png" alt="KinSoft" title="KinSoft ERP" class="img-circle"/>
+                    <img src="/web/static/src/img/logo2.png" alt="KinSoft" title="KinSoft ERP" />
                 </div>
                 <div class="user-info-block">
                     <div class="user-heading">
                         <h3>
                             Version <t t-esc="db_info.server_version"/>
-                            (Community Edition)
+                            (1.0)
                         </h3>
                         <t t-if="db_info.expiration_date">
                             <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
@@ -114,7 +114,7 @@
                         <div class="tab-content">
                             <div id="settings" class="tab-pane active">
                                 <h4>KinSoft ERP is Developed by KinSolve Solutions</h4>
-                                <h4>Powered by <a target="_blank" href="https://www.kinsofterp.com/opensource" style="text-decoration: underline;">Open Source Modules and Libaries</a></h4>
+                                <h4>Based on Odoo, OCA and other Odoo Module Contributors</h4>
                                 <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
                                 <p>For more information visit <a target="_blank" href="https://www.kinsolve.com" style="text-decoration: underline;">Kinsolve.com</a></p>
                                 <p>
