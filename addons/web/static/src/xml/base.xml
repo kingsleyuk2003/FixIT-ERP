@@ -100,12 +100,12 @@
                 <div class="user-image">
                     <img src="/web/static/src/img/logo2.png" alt="KinSoft" title="KinSoft ERP" />
                 </div>
+                <br />
                 <div class="user-info-block">
                     <div class="user-heading">
-                        <!--<h3>-->
-                            <!--Version <t t-esc="db_info.server_version"/>-->
-                            <!--(1.0)-->
-                        <!--</h3>-->
+                        <h3>
+                            Version  (1.0)
+                        </h3>
                         <t t-if="db_info.expiration_date">
                             <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
                         </t>
