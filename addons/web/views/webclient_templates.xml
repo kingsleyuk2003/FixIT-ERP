@@ -165,7 +165,7 @@
                     <title>KinSoft</title>
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/src/css/full.css" />
-                    <t t-raw="head or ''"/>
+                    <!--<t t-raw="head or ''"/>-->
                 </head>
                 <body t-att-class="body_classname">
                     <t t-raw="0"/>
@@ -196,12 +196,12 @@
                       <div class="text-center" >
                            Need Help for your ERP Implementation? Call +2348030412562. or Email: kingsley@kinsolve.com or info@kinsolve.com
                       </div>
-                      <p class="text-center" >
+                      <p />
+                      <div class="text-center" >
                           <b>Demo Login Credential</b><br />
                           <b>Username:</b> demo<br />
                           <b>Password:</b> demo
-
-                      </p>
+                      </div>
                   </div>
                 </div>
             </t>
