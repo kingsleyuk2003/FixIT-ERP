@@ -104,7 +104,7 @@
                 <div class="user-info-block">
                     <div class="user-heading">
                         <h3>
-                            Version  (1.0)
+                            Version (1.0)
                         </h3>
                         <t t-if="db_info.expiration_date">
                             <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
