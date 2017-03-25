@@ -5,7 +5,7 @@
 
 KinSoft ERP
 ----
-KinSoft ERP is a suite of web based open source business apps. It is based on Odoo, OCA and other Odoo Contributors. 
+KinSoft ERP is a suite of web based open source business apps. It is based on Odoo, OCA and other Odoo Contributors. For Demo: visit: http://kinsofterp.com:8069   username: demo  password: demo
 
 Getting started with KinSoft ERP
 -------------------------
