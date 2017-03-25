@@ -165,7 +165,7 @@
                     <title>KinSoft</title>
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/src/css/full.css" />
-                    <t t-raw="head or ''"/>
+                    <!-- <t t-raw="head or ''"/> -->
                 </head>
                 <body t-att-class="body_classname">
                     <t t-raw="0"/>
@@ -193,6 +193,11 @@
                         </t>
                         <!--<a href="https://www.odoo.com" target="_blank">Powered by <span>Open Source Softwares</span></a>-->
                     </div>
+<div class="text-center" >
+      <b><u>Demo Credentials</u></b><br />
+      Username/Email: demo <br />
+      Password: demo 
+</div>
 
                   </div>
                 </div>
