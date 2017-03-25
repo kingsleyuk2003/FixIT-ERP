@@ -196,7 +196,10 @@
                       <div class="text-center" >
                            Need Help for your ERP Implementation? Call +2348030412562. or Email: kingsley@kinsolve.com or info@kinsolve.com
                       </div>
-                      <p>
+                      <p class="text-center" >
+                          <b>Demo Login Credential</b><br />
+                          <b>Username:<b> demo<br />
+                          <b>Password:<b> demo
 
                       </p>
                   </div>
