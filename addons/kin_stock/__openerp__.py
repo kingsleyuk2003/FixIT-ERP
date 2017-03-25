@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Copyright 2017  Kinsolve Solutions
+# Copyright 2017 Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)
+# License: see https://www.gnu.org/licenses/lgpl-3.0.en.html
+
 {
     'name': 'Stock Modifications',
     'version': '0.1',
@@ -6,7 +12,7 @@
 Kincotech Customization
 =======================================================================================
 """,
-    'author': 'Kingsley',
+    'author': 'Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)',
     'website': 'http://kinsolve.com',
     'depends': ['base','stock','sale_stock','account','mail','purchase','kin_purchase','kin_account','kin_sales','account_analytic_default'],
     'data': [

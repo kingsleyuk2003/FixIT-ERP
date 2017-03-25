@@ -95,14 +95,14 @@
 
 										<thead>
 												<tr>
-													<td><span><b>Description</b></span></td>
+													<td width="50%" ><span><b>Description</b></span></td>
 													<td><span><b>Expected Delivery Date</b></span></td>
 													<td class="text-right" ><span><b>Quantity</b></span></td>
 												</tr>
 											</thead>
 											<tbody>
 												<tr  t-foreach="o.order_line" t-as="line" >
-													<td><span t-field="line.name"/></td>
+													<td style="padding-left: 2px" ><span t-field="line.name"/></td>
 													<td><span t-field="line.date_planned"/></td>
 													<td class="text-right">
 														<span t-field="line.product_qty"/>

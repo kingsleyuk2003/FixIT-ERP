@@ -89,14 +89,14 @@
  										<t t-set="has_serial_number" t-value="o.pack_operation_ids.filtered('pack_lot_ids')" groups="stock.group_production_lot"/>
 										<thead style="display: table-row-group " >
 											<tr>
-												<td><span><b>Description</b></span></td>
+												<td width="50%" ><span><b>Description</b></span></td>
 												<td class="text-right" ><span><b>Quantity</b></span></td>
 											</tr>
 										</thead>
 										<tbody>
 
 											<tr  t-foreach="o.pack_operation_ids" t-as="pack_operation" >
-												<td>
+												<td style="padding-left: 2px" >
 													<span t-field="pack_operation.name"/>
 													<t t-if="not pack_operation.product_id and pack_operation.package_id">
 														<span  t-field="pack_operation.package_id"/>

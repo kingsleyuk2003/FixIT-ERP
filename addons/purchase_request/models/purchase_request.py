@@ -183,7 +183,7 @@ class PurchaseRequestLine(models.Model):
         'product.product', 'Product',
         domain=[('purchase_ok', '=', True)],
         track_visibility='onchange')
-    name = fields.Char('Description', size=256,
+    name = fields.Text('Description',
                        track_visibility='onchange')
     product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure',
                                      track_visibility='onchange')

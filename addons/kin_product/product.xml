@@ -66,5 +66,51 @@
             </field>
         </record>
 
+
+
+        <record model="ir.ui.view"  id="product_cost_price_history_tree_view" >
+            <field name="name" >product.cost.price.history</field>
+            <field name="model" >product.price.history</field>
+            <field name="arch" type="xml">
+                <tree string="Product Cost History" >
+                    <field name="product_id" />
+                    <field name="cost" />
+                    <field name="datetime" />
+                    <field String="Company" name="company_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_product_cost_price_filter" model="ir.ui.view">
+            <field name="name">Product Cost Price History Search</field>
+            <field name="model">product.price.history</field>
+            <field name="arch" type="xml">
+                <search string="Product Cost Price History Search">
+                    <field name="product_id" />
+                    <field name="cost" />
+                    <field name="datetime" />
+                    <field name="company_id" />
+                     <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="groupby_product" string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+          <record id="action_product_cost_price_history" model="ir.actions.act_window">
+            <field name="name">Product Cost Price History</field>
+            <field name="res_model">product.price.history</field>
+            <field name="context">{'search_default_groupby_product': 1}</field>
+            <field name="view_type" >form</field>
+            <field name="view_mode">tree,pivot</field>
+            <field name="view_id" ref="product_cost_price_history_tree_view"/>
+             <field name="search_view_id" ref="view_product_cost_price_filter"/>
+        </record>
+
+
+     <menuitem id="menu_product_cost_price_history" name="Product Cost Price History"  action="action_product_cost_price_history" parent="base.menu_sale_report"    sequence="32"/>
+
     </data>
 </openerp>

@@ -112,7 +112,7 @@
                    <span t-if="company.footer_data" t-field="company.footer_data" />
                 </div>
             <div class="col-xs-2 text-right"   >
-                            Page: <span class="page"/> / <span class="topage"/>
+                       Pg: <span class="page" /> / <span class="topage"/>
                 </div>
            </div>
 

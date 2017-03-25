@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Copyright 2017  Kinsolve Solutions
+# Copyright 2017 Kingsley Okonkwo (kingsley@kinsolve.com)
+# License: see https://www.gnu.org/licenses/lgpl-3.0.en.html
 
 
 from openerp import api, fields, models, _, SUPERUSER_ID

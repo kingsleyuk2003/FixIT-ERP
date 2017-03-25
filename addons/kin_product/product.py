@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Copyright 2017  Kinsolve Solutions
+# Copyright 2017 Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)
+# License: see https://www.gnu.org/licenses/lgpl-3.0.en.html
+
+
 from datetime import datetime, timedelta
 from openerp import api, fields, models, _
 from urllib import urlencode
@@ -5,10 +12,10 @@ from urlparse import urljoin
 
 
 
-
-
 class ProductTemplateExtend(models.Model):
     _inherit = 'product.template'
+
+
 
     def _get_url(self, module_name, menu_id, action_id, context=None):
         fragment = {}
@@ -234,4 +241,3 @@ class ProductTemplateExtend(models.Model):
     description_picking = fields.Text('Description on Picking', translate=True,track_visibility = "onchange")
     min_alert_qty = fields.Float(string='Minimum Alert Qty.', help="Minimum Alert Qty. for the Item to be Included in the Notification Report")
     is_included_in_min_alert_qty = fields.Boolean(string="Include M.A.Q. in Notif.", help="Include this product in the email message that is sent sent by the scheduler")
-

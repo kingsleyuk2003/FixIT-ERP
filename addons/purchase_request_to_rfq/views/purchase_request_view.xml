@@ -99,5 +99,18 @@
             </field>
         </record>
 
+        <record id="purchase_request.purchase_request_line_form_action"
+                model="ir.actions.act_window">
+            <field name="name">Purchase Request Lines Pending</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.request.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('request_state','!=','draft'),('purchase_state','=',False)]</field>
+            <field name="search_view_id" ref="purchase_request_line_search"/>
+        </record>
+
+
+
     </data>
 </openerp>
