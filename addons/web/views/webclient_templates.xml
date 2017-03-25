@@ -162,7 +162,7 @@
                 <head>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
                     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title>KinSoft</title>
+                    <title></title>
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/src/css/full.css" />
                     <t t-raw="head or ''"/>
@@ -194,11 +194,11 @@
                         <!--<a href="https://www.odoo.com" target="_blank">Powered by <span>Open Source Softwares</span></a>-->
                     </div>
                       <div class="text-center" >
-                           Need Help for your ERP Implementation? Call +2348030412562. or Email: kingsley@kinsolve.com or info@kinsolve.com
+                           Need Help for your ERP Implementation? Call +2348030412562.  Email: kingsley@kinsolve.com or info@kinsolve.com
                       </div>
                       <p />
                       <div class="text-center" >
-                          <b><u>Demo Login Credential</u></b><br />
+                          <b><u>DEMO LOGIN CREDENTIALS</u></b><br />
                           <b>Username:</b> demo<br />
                           <b>Password:</b> demo
                       </div>
@@ -224,7 +224,7 @@
                     </div>
 
                     <div class="form-group field-login">
-                        <label for="login" class="control-label">Email</label>
+                        <label for="login" class="control-label">Username</label>
                         <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus" autocapitalize="off"/>
                     </div>
 
