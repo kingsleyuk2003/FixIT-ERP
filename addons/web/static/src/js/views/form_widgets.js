@@ -963,7 +963,7 @@ var TimezoneMismatch = FieldSelection.extend({
             this.$label.find('.oe_tz_warning').remove();
             var options = _.extend({
                 delay: { show: 501, hide: 0 },
-                title: _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to your field timezone."),
+                title: _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Kinsoft is displayed according to your field timezone."),
             });
             this.$label.css('white-space', 'normal');
             $(QWeb.render('WebClient.timezone_warning')).appendTo(this.$label);

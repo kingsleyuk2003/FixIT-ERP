@@ -271,8 +271,8 @@ var DashboardShare = Widget.extend({
     init: function(parent, data){
         this.data = data;
         this.parent = parent;
-        this.share_url = 'https://www.odoo.com';
-        this.share_text = encodeURIComponent("I am using #Odoo - Awesome open source business apps.");
+        this.share_url = 'https://www.kinsofterp.com';
+        this.share_text = encodeURIComponent("I am using #Kinsoft ERP - Awesome open source business apps.");
     },
 
     share_twitter: function(){
@@ -286,7 +286,7 @@ var DashboardShare = Widget.extend({
     },
 
     share_linkedin: function(){
-        var popup_url = _.str.sprintf('http://www.linkedin.com/shareArticle?mini=true&url=%s&title=I am using odoo&summary=%s&source=www.odoo.com', encodeURIComponent(this.share_url), this.share_text);
+        var popup_url = _.str.sprintf('http://www.linkedin.com/shareArticle?mini=true&url=%s&title=I am using kinsoft&summary=%s&source=www.kinsofterp.com', encodeURIComponent(this.share_url), this.share_text);
         this.sharer(popup_url);
     },
 
