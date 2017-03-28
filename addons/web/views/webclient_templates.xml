@@ -169,6 +169,41 @@
                 </head>
                 <body t-att-class="body_classname">
                     <t t-raw="0"/>
+
+                    <!-- Start of StatCounter Code for Default Guide -->
+                    <script type="text/javascript">
+                    //<![CDATA[
+                    var sc_project=11296061;
+                    var sc_invisible=1;
+                    var sc_security="729e21cf";
+                    var scJsHost = (("https:" == document.location.protocol) ?
+                    "https://secure." : "http://www.");
+                    document.write("<sc"+"ript type='text/javascript' src='" +
+                    scJsHost+
+                    "statcounter.com/counter/counter_xhtml.js'></"+"script>");
+                    //]]>
+                    </script>
+                    <noscript><div class="statcounter"><a title="web analytics"
+                    href="http://statcounter.com/" class="statcounter"><img
+                    class="statcounter"
+                    src="//c.statcounter.com/11296061/0/729e21cf/1/" alt="web
+                    analytics" /></a></div></noscript>
+                    <!-- End of StatCounter Code for Default Guide -->
+
+                    <!--Start of Tawk.to Script-->
+                    <script type="text/javascript">
+                    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+                    (function(){
+                    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                    s1.async=true;
+                    s1.src='https://embed.tawk.to/56c1a5dbb625e7972753821a/default';
+                    s1.charset='UTF-8';
+                    s1.setAttribute('crossorigin','*');
+                    s0.parentNode.insertBefore(s1,s0);
+                    })();
+                    </script>
+<!--End of Tawk.to Script-->
+
                 </body>
             </html>
         </template>
