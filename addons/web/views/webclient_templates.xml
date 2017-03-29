@@ -228,7 +228,10 @@
                 woopra.config({
                     domain: 'kinsofterp.com'
                 });
-                woopra.track();
+                woopra.track("pv", {
+    url: location.pathname + location.search  + location.hash,
+    title: document.title + 'Kincotech'
+});
                 </script>
                 <!-- End of Woopra Code -->
 
