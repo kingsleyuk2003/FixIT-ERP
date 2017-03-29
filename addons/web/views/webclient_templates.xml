@@ -154,6 +154,8 @@
             <script type="text/javascript" src="/web/static/src/js/views/search_menus.js"></script>
             <script type="text/javascript" src="/web/static/src/js/views/tree_view.js"></script>
             <script type="text/javascript" src="/web/static/src/js/apps.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/jquery.ba-hashchange.min.js"></script>
+
 
         </template>
 
@@ -169,6 +171,19 @@
                 </head>
                 <body t-att-class="body_classname">
                     <t t-raw="0"/>
+
+                    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96355448-1', 'auto');
+  ga('send', 'pageview', {
+ 'page': location.pathname + location.search  + location.hash
+});
+
+</script>
 
                     <!-- Start of StatCounter Code for Default Guide -->
                     <script type="text/javascript">
