@@ -184,7 +184,6 @@
 });
 
 </script>
-
                     <!-- Start of StatCounter Code for Default Guide -->
                     <script type="text/javascript">
                     //<![CDATA[
@@ -198,11 +197,11 @@
                     "statcounter.com/counter/counter_xhtml.js'></"+"script>");
                     //]]>
                     </script>
-                    <noscript><div class="statcounter"><a title="web analytics"
+                    <noscript><div class="statcounter"><a title="site stats"
                     href="http://statcounter.com/" class="statcounter"><img
                     class="statcounter"
-                    src="//c.statcounter.com/11296061/0/729e21cf/1/" alt="web
-                    analytics" /></a></div></noscript>
+                    src="//c.statcounter.com/11296061/0/729e21cf/1/" alt="site
+                    stats" /></a></div></noscript>
                     <!-- End of StatCounter Code for Default Guide -->
 
                     <!--Start of Tawk.to Script-->
@@ -267,6 +266,21 @@
                           <b><u>DEMO LOGIN CREDENTIALS</u></b><br />
                           <b>Username:</b> demo<br />
                           <b>Password:</b> demo
+                      </div>
+                      <br />
+                      <div class="text-center" >
+                          <b><u>ABOUT ME</u></b><br />
+                          <b>Name:</b> Kingsley Okonkwo<br />
+                          <b>Job Title:</b> ERP Consultant/Developer <br />
+                          <b>Linked In Profile:</b> <a href="https://www.linkedin.com/in/kingsleyuk2003/"> Click to See my LinkedIn Profile</a><br />
+                          <b>Office Address:</b> Suite 212, AHCN Towers, Off CIPM Road, Ikeja, Lagos <b/>
+                          <b>Website: </b> <a href="https://kinsolve.com">https://kinsolve.com</a>  <br />
+                          <b>Mobile: </b> +2348030412562 <br />
+                          <b>Email: </b> kingsley@kinsolve.com <br />
+                      </div>
+                      <br />
+                      <div class="text-center">
+                          <a href="https://github.com/kingsleyuk2003/KinSoft-ERP" >Follow the Link to DOWNLOAD a free Copy</a>
                       </div>
                   </div>
                 </div>
