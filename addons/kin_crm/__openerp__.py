@@ -16,7 +16,9 @@ CRM Extensions
     'website': 'http://kinsolve.com',
     'depends': ['base','crm','sale'],
     'data': [
-        'crm_view.xml',
+
+        'security/security.xml',
+           'crm_view.xml',
     ],
     'test':[],
     'installable': True,

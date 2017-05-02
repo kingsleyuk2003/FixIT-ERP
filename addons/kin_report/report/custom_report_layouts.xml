@@ -67,8 +67,8 @@
 
 <template id="custom_header">
      <!-- Multicompany -->
-	 <t t-if="o and 'company_id' in o">
-        <t t-set="company" t-value="o.company_id"></t>
+	 <t t-if="o and 'operating_unit_id' in o">
+        <t t-set="company" t-value="o.operating_unit_id"></t>
     </t>
     <t t-if="not o or not 'company_id' in o">
         <t t-set="company" t-value="res_company"></t>
@@ -94,8 +94,8 @@
 
 <template id="custom_footer">
     <!-- Multicompany -->
-	 <t t-if="o and 'company_id' in o">
-        <t t-set="company" t-value="o.company_id"></t>
+	  <t t-if="o and 'operating_unit_id' in o">
+        <t t-set="company" t-value="o.operating_unit_id"></t>
     </t>
     <t t-if="not o or not 'company_id' in o">
         <t t-set="company" t-value="res_company"></t>

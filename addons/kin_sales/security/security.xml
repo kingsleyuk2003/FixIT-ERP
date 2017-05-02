@@ -37,6 +37,19 @@
 			<field name="name">Receive Invoice Before Delivery Notification Email</field>
 		</record>
 
+	   <record id="group_show_sale_menu" model="res.groups">
+			<field name="name">Show "Sales" Menu</field>
+		</record>
+
+
+		<record id="group_show_customer_account_fields" model="res.groups">
+			<field name="name">Show Customer Account fields</field>
+		</record>
+
+		<record id="group_show_margin_cost_fields" model="res.groups">
+			<field name="name">Show Margin and Cost fields</field>
+		</record>
+
 
 
 </data>

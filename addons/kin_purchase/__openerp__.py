@@ -16,8 +16,8 @@ Purchase Modifications
     'website': 'http://kinsolve.com',
     'depends': ['base','purchase','purchase_request'],
     'data': [
-        'security/ir.model.access.csv',
         'security/security.xml',
+        'security/ir.model.access.csv',
         'purchase_view.xml',
         'mail_template.xml',
         'report/report_purchasequotation.xml',

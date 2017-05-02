@@ -16,8 +16,9 @@ Sales Modifications.
     'website': 'http://kinsolve.com',
     'depends': ['base','sale','account','sale_margin','sales_team','sale_stock','purchase_request'],
     'data': [
-        'sale_view.xml',
+
         'security/security.xml',
+         'sale_view.xml',
         'security/ir.model.access.csv',
         'mail_template.xml',
         'sequence.xml',

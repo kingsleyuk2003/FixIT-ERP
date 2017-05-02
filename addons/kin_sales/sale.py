@@ -48,6 +48,25 @@ class ResCompanyExtend(models.Model):
 class SaleOrderExtend(models.Model):
     _inherit = "sale.order"
 
+
+    @api.multi
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        res = super(SaleOrderExtend,self).onchange_partner_id()
+        self.operating_unit_id_change()
+        return res
+
+    @api.multi
+    @api.onchange('operating_unit_id')
+    def operating_unit_id_change(self):
+        pricelist_ou = self.env['product.pricelist'].search([('operating_unit_id', '=', self.operating_unit_id.id)])
+        sales_team_ou = self.env['crm.team'].search([('operating_unit_id', '=', self.operating_unit_id.id)])
+        # Note that update() is different from Write(). Update(0 method updates on the front end. Similar to what return {'value':{}} does
+        if pricelist_ou :
+            self.update({'pricelist_id':pricelist_ou[0].id,'team_id':sales_team_ou[0].id})
+
+
+
     @api.multi
     def copy(self, default=None):
         self.ensure_one()
@@ -229,6 +248,7 @@ class SaleOrderExtend(models.Model):
                     ]
         vals = {
                 'origin' : self.name,
+                'sale_order_id': self.id,
                 'description': self.user_id.name + " was about selling the following listed items with zero stock level. Please request for the items to be purchased from the manager. The sales order reference is: " + self.name ,
                 'line_ids':lines
             }
@@ -448,6 +468,12 @@ class SaleOrderExtend(models.Model):
     so_name = fields.Char('SO Name')
     quote_name = fields.Char('Quote Name')
 
+    credit = fields.Monetary(string='Total Receivable',related='partner_id.credit', store=True)
+    not_due_amount_receivable = fields.Monetary(string='Not Due',related='partner_id.not_due_amount_receivable',store=True)
+    due_amount_receivable = fields.Monetary(string='Due', related='partner_id.due_amount_receivable',store=True)
+    credit_limit = fields.Monetary(string='Credit Limit', related='partner_id.credit_limit',  track_visibility='onchange', store=True)
+    allowed_credit = fields.Float(string='Remaining Credit Allowed', related='partner_id.allowed_credit',store=True)
+
     state = fields.Selection([
         ('draft', 'Quotation'),
         ('sent', 'Quotation Sent'),
@@ -585,10 +611,10 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.price_unit:
                 disc_amt = line.discount_amt
-                taxes = line.tax_id.compute_all((line.price_unit-disc_amt), line.order_id.currency_id, line.product_qty, product=line.product_id, partner=line.order_id.partner_id)
+                taxes = line.tax_id.compute_all((line.price_unit-disc_amt), line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
 
-                #means to write to the database fields. you can do direct assignment, but it is not suitable,
-                # because, it will hit the database for the number of writes/assignment. e.g. line.price_subtotal = taxes['total_excluded']
+                #Using write() here does not work.  but direct assignments works, but not suitable,
+                # Note that update() is different from Write(). Update(0 method updates on the front end. Similar to what return {'value':{}} does
                 line.update({
                 'price_tax': taxes['total_included'] - taxes['total_excluded'],
                 'price_total': taxes['total_included'],
@@ -636,6 +662,7 @@ class SaleOrderLine(models.Model):
         if self.product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             product_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, self.product_id.uom_id)
+
             if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
 
                 sale_stock_loc_ids = self.order_id.team_id.sale_stock_location_ids
@@ -652,8 +679,10 @@ class SaleOrderLine(models.Model):
                         'message' : _('You plan to sell %.2f %s of %s, but you only have %.2f %s available in the assigned stock location(s) (%s) \n The total stock on hand in the stock location(s) (%s) for %s is %.2f %s.') % \
                             (order_line_qty, self.product_uom.name, self.product_id.name, qty_available, self.product_id.uom_id.name,  stck_list, stck_list, self.product_id.name, qty_available, self.product_id.uom_id.name)
                     }
+
                     return {'warning': warning_mess}
         return {}
+
 
 
     @api.multi
@@ -673,13 +702,29 @@ class SaleOrderLine(models.Model):
             name = product.description_sale
             vals['name'] = name
             self.update(vals)
+
+        if self.product_id.type == 'product':
+            ctx = {}
+            product_id = product.id
+            qty_available = 0
+            product_obj = self.env['product.product']
+            sale_stock_loc_ids = self.order_id.team_id.sale_stock_location_ids
+            for location_id in sale_stock_loc_ids:
+                ctx.update({"location": location_id.id})
+                res = product_obj.browse([product_id])[0].with_context(ctx)._product_available()
+                qty_available += res[product_id]['qty_available']
+
+            product_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, qty_available,self.product_id.uom_id)
+            vals['qty_available'] = product_qty
+            self.update(vals)
+
         return res
 
 
 
-    discount_amt = fields.Float(string='Disc./Unit (Amt.)', digits=dp.get_precision('Discount'), default=0.0)
+    discount_amt = fields.Monetary(string='Disc./ Unit (Amt.)')
     date_order = fields.Datetime(string='Order date',related='order_id.date_order',ondelete='cascade', index=True,store=True)
-
+    qty_available = fields.Float('Qty. Available',readonly=True)
 
 
 class ResPartner(models.Model):
@@ -745,10 +790,10 @@ class ResPartner(models.Model):
                 partner.allowed_credit = allowed_credit
 
 
-    credit_limit = fields.Float(string='Credit Limit')
+    credit_limit = fields.Monetary(string='Credit Limit')
     is_enforce_credit_limit_so = fields.Boolean(string='Enforce Credit Limit on Sales Order')
-    due_amount_receivable = fields.Float(string='Due',compute=_get_due_amount_receivable,help='Receivables that are Due to be paid')
-    not_due_amount_receivable = fields.Float(string='Not Due',compute=_get_not_due_amount_receivable,help='Receivables that are Not Due to be Paid')
+    due_amount_receivable = fields.Monetary(string='Due',compute=_get_due_amount_receivable,help='Receivables that are Due to be paid')
+    not_due_amount_receivable = fields.Monetary(string='Not Due',compute=_get_not_due_amount_receivable,help='Receivables that are Not Due to be Paid')
     allowed_credit = fields.Float(string='Remaining Credit Allowed',compute=_get_allowed_credit,help='Credit Allowance for the partner')
 
     # NOT NECESSARY, THE SYSTEM WORKS AS EXPECTED OUT OF THE BOX

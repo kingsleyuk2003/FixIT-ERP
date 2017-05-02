@@ -1,6 +1,8 @@
 <openerp>
 	<data>
-		 <menuitem id="hr_menus" sequence="100" name="Human Resources"  web_icon="hr,static/description/icon.png"   />
+
+
+		 <menuitem id="hr_menus" sequence="100" name="Human Resources"  web_icon="hr,static/description/icon.png" groups="group_show_hr_menu"   />
          <menuitem id="hr.menu_hr_root" parent="hr_menus" sequence="0"  name="Employees"   />
         <menuitem id="hr_payroll.menu_hr_payroll_root" parent="hr_menus" sequence="1" name="Payroll"    />
         <menuitem id="hr_expense.menu_hr_expense_root" parent="hr_menus" sequence="2"  name="Expenses"   />

@@ -180,10 +180,25 @@
 
   ga('create', 'UA-96355448-1', 'auto');
   ga('send', 'pageview', {
- 'page': location.pathname + location.search  + location.hash
-});
+ 'page': location.pathnam</script>
 
-</script>
+
+                    <!-- Start of StatCounter Code for Default Guide -->
+                    <script type="text/javascript">
+                    //
+                    var sc_project=11296061;
+                    var sc_invisible=1;
+                    var sc_security="729e21cf";
+                    var scJsHost = (("https:" == document.location.protocol) ?
+                    "https://secure." : "http://www.");
+                    document.write("&lt;sc"+"ript type='text/javascript' src='" +
+                    scJsHost+
+                    "statcounter.com/counter/counter_xhtml.js'&gt;&lt;/"+"script&gt;");
+                    //
+                    </script>
+                    <noscript><div class="statcounter"><a title="site stats" href="http://statcounter.com/" class="statcounter"><img class="statcounter" src="//c.statcounter.com/11296061/0/729e21cf/1/" alt="site                     stats"/></a></div></noscript>
+                    <!-- End of StatCounter Code for Default Guide -->
+
                     <!-- Start of StatCounter Code for Default Guide -->
                     <script type="text/javascript">
                     //<![CDATA[

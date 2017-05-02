@@ -17,6 +17,7 @@ from openerp.exceptions import UserError, Warning
 class PurchaseOrderExtend(models.Model):
     _inherit = 'purchase.order'
 
+
     @api.depends('order_line.price_total')
     def _amount_all(self):
         for order in self:
@@ -119,7 +120,7 @@ class PurchaseOrderExtend(models.Model):
                         ctx = {
                             'system_email': company_email,
                             'purchase_person_name': purchase_person_name,
-                            'purchase_person_name': purchase_person_name,
+                            'purchase_person_email': purchase_person_email,
                             'notify_person_email': user.partner_id.email,
                             'notify_person_name': user.partner_id.name,
                             'url': the_url
@@ -181,6 +182,15 @@ class PurchaseOrderExtend(models.Model):
 
         return True
 
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        res = super(PurchaseOrderExtend, self).copy(default)
+        res.po_name = False
+        res.group_id = False
+        return res
 
     @api.multi
     def button_draft(self):

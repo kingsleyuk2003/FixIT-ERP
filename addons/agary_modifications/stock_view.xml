@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        <record id="view_picking_form_agary_extend" model="ir.ui.view">
+            <field name="name">stock.picking.form.agary.extend</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="arch" type="xml">
+               <notebook position="inside">
+                    <page string="Goods Received Note Information">
+                        <group col="4">
+                            <field name="grn_no"  />
+                            <field name="date_grn" />
+                            <field name="order_no_waybill" />
+                            <field name="invoice_no" />
+                            <field name="po_no" />
+                            <field name="agent_id" />
+                            <field name="driver_id" />
+                            <field name="tel_mobile" />
+                            <field name="container_no" />
+                            <field name="vehicle_no" />
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
+
+        <record id="vpicktree_agary_extend" model="ir.ui.view">
+            <field name="name">stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+             <field name="inherit_id" ref="stock.vpicktree"  />
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after" >
+                    <field name="grn_no" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_picking_internal_search_agary_extend" model="ir.ui.view">
+            <field name="name">stock.picking.internal.search.agary.extend</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search" />
+            <field name="arch" type="xml">
+                    <field name="partner_id" position="before" >
+                        <field name="grn_no" />
+                    </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

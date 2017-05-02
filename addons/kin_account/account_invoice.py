@@ -641,7 +641,7 @@ class AccountInvoiceLineExtend(models.Model):
 
 
 
-    discount_amt = fields.Monetary(string='Disc./Unit (Amt.)', digits=dp.get_precision('Discount'), default=0.0)
+    discount_amt = fields.Monetary(string='Disc./ Unit (Amt.)')
     discount_analytic_line = fields.Many2one('account.analytic.line',string="Discount Analytic Line")
     cos = fields.Monetary(string='Unit Cost of Sales')
     cos_total = fields.Monetary(string='Total Cost of Sales')

@@ -109,6 +109,17 @@
              <field name="search_view_id" ref="view_product_cost_price_filter"/>
         </record>
 
+        <record model="ir.ui.view" id="product_pricelist_view_extend">
+            <field name="name">product.pricelist.form.extend</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="operating_unit_id"/>
+                </field>
+            </field>
+        </record>
+
 
      <menuitem id="menu_product_cost_price_history" name="Product Cost Price History"  action="action_product_cost_price_history" parent="base.menu_sale_report"    sequence="32"/>
 

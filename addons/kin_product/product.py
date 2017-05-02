@@ -11,6 +11,11 @@ from urllib import urlencode
 from urlparse import urljoin
 
 
+class ProductPricelistExtend(models.Model):
+    _inherit = 'product.pricelist'
+
+    operating_unit_id = fields.Many2one('operating.unit',string='Operating Unit')
+
 
 class ProductTemplateExtend(models.Model):
     _inherit = 'product.template'

@@ -16,6 +16,7 @@ Kincotech Customization
     'website': 'http://kinsolve.com',
     'depends': ['base','hr','hr_payroll','hr_expense','hr_attendance','hr_holidays'],
     'data': [
+        'security/security.xml',
         'menus_arrange.xml',
     ],
     'test':[],

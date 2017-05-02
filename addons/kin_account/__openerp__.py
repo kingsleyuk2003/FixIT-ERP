@@ -16,14 +16,18 @@ Account Modifications
     'website': 'http://kinsolve.com',
     'depends': ['base','account','account_asset','purchase','account_extra_reports','analytic','report'],
     'data': [
+         'security/security.xml',
         'account_view.xml',
         'account_invoice_view.xml',
+        'account_payment_view.xml',
         'product_view.xml',
         'wizard/account_report_partner_ledger_view.xml',
         'wizard/account_report_general_ledger_view.xml',
         'wizard/account_report_aged_partner_balance_view.xml',
         'report/report_trialbalance.xml',
         'report/account_invoice.xml',
+        'sequence.xml',
+
     ],
     'test':[],
     'installable': True,

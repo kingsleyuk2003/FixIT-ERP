@@ -14,10 +14,10 @@ Other Miscelleaneous Modifications
 """,
     'author': 'Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)',
     'website': 'http://kinsolve.com',
-    'depends': ['base'],
+    'depends': ['base','sale'],
     'data': [
+         'security/security.xml',
         'cron_data.xml',
-        'security/security.xml',
         'others_view.xml',
 
     ],

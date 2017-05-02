@@ -1118,13 +1118,14 @@ class StockLocation(models.Model):
 
     @api.multi
     def write(self,vals):
-        is_default_option = vals.get('is_default_option',None)
-        if is_default_option == None :
-            is_default_option = self.is_default_option
-        if is_default_option :
-            vals['usage'] = 'view'
-        res = super(StockLocation,self).write(vals)
-        return  res
+        for rec in self :
+            is_default_option = vals.get('is_default_option',None)
+            if is_default_option == None :
+                is_default_option = rec.is_default_option
+            if is_default_option :
+                vals['usage'] = 'view'
+            res = super(StockLocation,rec).write(vals)
+            return  res
 
 class StockPickingType(models.Model):
     _inherit = "stock.picking.type"

@@ -2,6 +2,11 @@
 <openerp>
     <data>
 
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
+            web_icon="sale,static/description/icon.png"
+            groups="kin_sales.group_show_sale_menu" sequence="6"/>
+
 <record id="crm_team_view_form_extend" model="ir.ui.view">
             <field name="name">crm.team.form.extend</field>
             <field name="model">crm.team</field>
@@ -86,6 +91,10 @@
                     <field name="discount_amt" groups="sale.group_discount_per_so_line" />
                 </xpath>
 
+                <xpath expr="//tree/field[@name='product_uom_qty']" position="after" >
+                    <field name="qty_available" />
+                </xpath>
+
                  <xpath expr="//tree/field[@name='name']" position="attributes">
                     <attribute name="attrs" >{'readonly': 1}</attribute>
                  </xpath>
@@ -157,6 +166,15 @@
                  </field>
                 <field name="amount_total" position="after" >
                     <field name="amt_discount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+
+                    <separator colspan="2" class="oe_subtotal_footer_separator" groups="kin_sales.group_show_customer_account_fields"  />
+                    <span colspan="2" groups="kin_sales.group_show_customer_account_fields" ><b><u>Account Information</u></b></span>
+                    <field name="credit" groups="kin_sales.group_show_customer_account_fields" />
+                    <field name="not_due_amount_receivable" groups="kin_sales.group_show_customer_account_fields" />
+                    <field name="due_amount_receivable" groups="kin_sales.group_show_customer_account_fields" />
+                    <field name="credit_limit" groups="kin_sales.group_show_customer_account_fields" />
+                    <field name="allowed_credit" groups="kin_sales.group_show_customer_account_fields" />
+
                 </field>
             </field>
         </record>
@@ -343,13 +361,35 @@
         <field name="arch" type="xml">
            <xpath expr="//field[@name='order_line']/tree//field[@name='purchase_price']" position="attributes">
                <attribute name="readonly">1</attribute>
+               <attribute name="groups" >kin_sales.group_show_margin_cost_fields</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='purchase_price']" position="after">
-               <field name="margin" />
+               <field name="margin" groups="kin_sales.group_show_margin_cost_fields" />
             </xpath>
 
         </field>
     </record>
+
+    <record model="ir.ui.view" id="sale_margin_sale_order_extend">
+        <field name="name">sale.order.margin.view.form.extend</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_margin_grp']/field[@name='margin']" position="attributes">
+                <attribute name="groups" >kin_sales.group_show_margin_cost_fields</attribute>
+            </xpath>
+        </field>
+    </record>
+
+        <!-- Extending the windows action -->
+         <record id="sale.action_orders" model="ir.actions.act_window">
+            <field name="context">{'readonly_by_pass':True}</field>
+        </record>
+
+        <record id="sale.action_quotations" model="ir.actions.act_window">
+            <field name="context">{'readonly_by_pass':True}</field>
+        </record>
+
  <!--<menuitem id="sales_team.menu_sales_team_act" action="sales_team.crm_team_salesteams_act" sequence="5" parent="base.menu_base_partner" name="Dashboard"/>-->
  <!--<menuitem id="menu_sales_team_act_child" action="sales_team.crm_team_salesteams_act" sequence="1" parent="sales_team.menu_sales_team_act" name="Dashboard"/>-->
 

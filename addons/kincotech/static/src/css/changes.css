@@ -7,9 +7,9 @@
 }
 
 .navbar-inverse {
-   background-color: #000099;
+   background-color: #337ab7;
   /** background-color: #30A1FD;**/
-   border-color: #000099;
+   border-color: #337ab7;
   /** border-color: #30A1FD; **/
 }
 
@@ -18,7 +18,7 @@
 }
 
 .navbar-default {
-    background-color: #000099;
+    background-color: #337ab7;
 
 }
 
@@ -43,7 +43,7 @@
 
 
 .openerp .nav-pills > li.active > a, .openerp a.list-group-item.active > a {
-    background-color: #000099;
+    background-color: #337ab7;
     color: white;
     border-radius: 0;
 }

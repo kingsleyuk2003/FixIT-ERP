@@ -3,38 +3,21 @@
 # Copyright 2017  Kinsolve Solutions
 # Copyright 2017 Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)
 # License: see https://www.gnu.org/licenses/lgpl-3.0.en.html
+from openerp import api, fields, models, _
+from openerp.tools.float_utils import float_compare
+from urllib import urlencode
+from urlparse import urljoin
+import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError, RedirectWarning, ValidationError
+from openerp.tools import amount_to_text
 
-from openerp import models, fields, api, _
+class AccountPaymentExtend(models.Model):
+    _inherit = 'account.payment'
 
-
-class AccountPayment(models.Model):
-    _inherit = "account.payment"
-
-    # def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
-    #     """ Returns values common to both move lines (except for debit, credit and amount_currency which are reversed)
-    #     """
-    #     res = super(AccountPayment,self)._get_shared_move_line_vals( debit, credit, amount_currency, move_id, invoice_id=invoice_id)
-    #
-    #     journal_id = self.journal_id or False
-    #     if journal_id :
-    #         if self.payment_type == 'inbound' and credit != 0 or self.payment_type == 'outbound' and debit != 0 :
-    #             analytic_account_id = journal_id.analytic_account_id
-    #
-    #             if analytic_account_id :
-    #                 res.update({'analytic_account_id':analytic_account_id.id})
-    #
-    #     return res
+    ref_no = fields.Char(string='Reference No')
 
 
-    # def _get_liquidity_move_line_vals(self, amount):
-    #
-    #     vals = super(AccountPayment,self)._get_liquidity_move_line_vals(amount=amount)
-    #
-    #     journal_id = self.journal_id or False
-    #     if journal_id :
-    #         analytic_account_id = journal_id.analytic_account_id
-    #
-    #         if analytic_account_id :
-    #             vals.update({'analytic_account_id':analytic_account_id.id})
-    #
-    #     return vals
+
+
+
+

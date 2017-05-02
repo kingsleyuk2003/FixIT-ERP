@@ -14,12 +14,13 @@ Product Modifications
 """,
     'author': 'Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)',
     'website': 'http://kinsolve.com',
-    'depends': ['base','product','stock'],
+    'depends': ['base','product','stock','operating_unit'],
     'data': [
+         'security/security.xml',
         'cron_data.xml',
         'product.xml',
         'mail_template.xml',
-        'security/security.xml',
+
     ],
     'test':[],
     'installable': True,

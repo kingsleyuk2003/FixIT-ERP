@@ -4,7 +4,7 @@
 
 
     <menuitem name="Sales &amp; CRM" id="base.menu_base_partner" web_icon="sale,static/description/icon.png"
-            groups="base.group_sale_salesman,base.group_sale_manager" sequence="6"/>
+            groups="kin_crm.group_show_crm_menu" sequence="6"/>
     <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="3"/>
     <menuitem id="crm_menu" name="CRM" parent="base.menu_base_partner" sequence="4" />
     <menuitem name="Leads" id="crm.menu_crm_leads" parent="crm_menu" sequence="1" action="crm.crm_lead_all_leads" />

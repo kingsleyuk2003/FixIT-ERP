@@ -115,10 +115,12 @@
 												<tr  t-foreach="o.order_line" t-as="line" >
 													<td  style="padding-left: 2px" ><span t-field="line.name"/></td>
 													<td class="text-right">
-														<span t-field="line.product_qty"/>
+														<span t-field="line.product_uom_qty"/>
 														<span t-field="line.product_uom.name" groups="product.group_uom"/>
 													</td>
 													<td class="text-right">
+														<!-- See: https://pyformat.info/ -->
+														<!--<span  t-esc="'{:,.2f}'.format(line.price_unit)" />  Two decimal places-->
 														<span  t-esc="'{:,}'.format(line.price_unit)" />
 													</td>
 													<td  t-if="display_discount"  class="text-right">
@@ -168,40 +170,13 @@
 						<!--<p t-if="o.payment_term_id"  >-->
 							<!--<span t-field="o.payment_term_id.note"/>-->
             			<!--</p>-->
-						<p />
+						<br /><br />
 						<div class="row" >
 							<div class="col-xs-12" >
-								<div class="row">
-									<div class="col-xs-12" >
-										<span style="font-weight:bold" >Prepared By: </span><span t-field="o.user_id.name" />
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-12" >
-										<br />
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-12" >
-										<span  style="font-weight:bold" t-field="o.company_id.name" /><span style="font-weight:bold"  >    Signature</span> : ........................................................................
-									</div>
-
-								</div>
-								<div class="row">
-									<div class="col-xs-12" >
-										<br />
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-12" >
-										<span style="font-weight:bold" >Customer's Signature &amp; Acceptance of Quote: </span>   .............................................................
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-xs-12" >
-										<br />
-									</div>
-								</div>
+								<p><span style="font-weight:bold" >Prepared By: </span><span t-field="o.user_id.name" /></p>
+								<p><span  style="font-weight:bold" t-field="o.company_id.name" /><span style="font-weight:bold"  >    Signature</span> : ........................................................................</p>
+								<p><span style="font-weight:bold" >Customer's Signature &amp; Acceptance of Quote: </span>   ................................................................</p>
+								<br />
 								<div class="row text-center">
 									<span style="font-weight:bold" class="text-center"  ><h3>Thank you for your business!</h3></span>
 								</div>

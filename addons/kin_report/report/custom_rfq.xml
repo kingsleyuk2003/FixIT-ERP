@@ -105,7 +105,7 @@
 													<td style="padding-left: 2px" ><span t-field="line.name"/></td>
 													<td><span t-field="line.date_planned"/></td>
 													<td class="text-right">
-														<span t-field="line.product_qty"/>
+														<span t-esc="line.product_qty"/>
 														<span t-field="line.product_uom.name" groups="product.group_uom"/>
 													</td>
 												</tr>

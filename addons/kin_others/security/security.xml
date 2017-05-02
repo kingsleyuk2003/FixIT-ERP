@@ -4,6 +4,5 @@
 		<record id="group_mail_delivery_failed" model="res.groups">
 			<field name="name">Receive Mail Delivery Failed Email Notification</field>
 		</record>
-
 </data>
 </openerp>

@@ -105,6 +105,8 @@ class PurchaseRequest(models.Model):
                                       'Picking Type', required=True,
                                       default=_default_picking_type)
 
+    sale_order_id = fields.Many2one('sale.order',string='Sales Order')
+
     @api.multi
     def copy(self, default=None):
         default = dict(default or {})
@@ -115,13 +117,7 @@ class PurchaseRequest(models.Model):
         })
         return super(PurchaseRequest, self).copy(default)
 
-    @api.model
-    def create(self, vals):
-        request = super(PurchaseRequest, self).create(vals)
-        if vals.get('assigned_to'):
-            #request.message_subscribe_users(user_ids=[request.assigned_to.id])
-            pass
-        return request
+
 
     @api.multi
     def write(self, vals):
@@ -232,6 +228,8 @@ class PurchaseRequestLine(models.Model):
     supplier_id = fields.Many2one('res.partner',
                                   string='Preferred supplier',
                                   compute="_compute_supplier_id")
+
+    customer_id = fields.Many2one('res.partner',related='request_id.sale_order_id.partner_id',string='Customer', store=True)
 
     procurement_id = fields.Many2one('procurement.order',
                                      'Procurement Order',

@@ -14,7 +14,7 @@ Report Modifications
 """,
     'author': 'Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)',
     'website': 'http://kinsolve.com',
-    'depends': ['base','sale','kin_sales','purchase','kin_purchase','account','kin_account','stock','kin_stock','report_xlsx'],
+    'depends': ['base','sale','kin_sales','purchase','kin_purchase','account','kin_account','stock','kin_stock','report_xlsx','operating_unit','account_payment_group','kin_account_payment_group'],
     'data': [
         'wizard/stock_level_wizard_view.xml',
         'report/custom_report_layouts.xml',
@@ -24,6 +24,7 @@ Report Modifications
         'report/custom_sales_order.xml',
         'report/custom_waybill.xml',
         'report/custom_invoice.xml',
+        'report/custom_receipt.xml',
         'kin_report.xml',
     ],
     'test':[],

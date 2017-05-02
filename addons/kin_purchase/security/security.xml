@@ -19,6 +19,11 @@
 			<field name="category_id" ref="module_category_purchase_request_approver"/>
 		</record>
 
+		<record id="group_show_purchase_menu" model="res.groups">
+			<field name="name">Show "Purchase" Menu</field>
+		</record>
+
+
 
 
 

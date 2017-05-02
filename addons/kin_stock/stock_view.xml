@@ -2,6 +2,14 @@
 <openerp>
     <data>
 
+<!-- Always Repeat this each time you update the parent module. you Still need to do manual deletion of the groups from the menu, for this to tbe effective-->
+        <menuitem name="Inventory"
+            id="stock.menu_stock_root"
+            groups="kin_stock.group_show_inventory_menu"
+            icon="fa-archive"
+            web_icon="stock,static/description/icon.png"
+            sequence="30"/>
+
         <template id="kin_stock_assets_backend" name="kin_stock_assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/kin_stock/static/src/css/kin_stock.css"/>
@@ -66,7 +74,7 @@
                 </field>
 
                  <button name="force_assign" position="attributes"  >
-                    <attribute name="invisible">1</attribute>
+                    <attribute name="groups" >kin_stock.group_force_availability_button</attribute>
                  </button>
 
                 <button name="%(stock.act_stock_return_picking)d"  position="before" >

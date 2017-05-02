@@ -35,8 +35,8 @@
                         <tr>
                             <th>Code</th>
                             <th>Account</th>
-                            <th class="text-right">Debit</th>
-                            <th class="text-right">Credit</th>
+                            <th class="text-right">Debit Bal.</th>
+                            <th class="text-right">Credit Bal.</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,15 +51,16 @@
                                 <span t-att-style="style" t-esc="account['name']"/>
                             </td>
                             <td class="text-right">
-                                <t t-if="account['balance'] &lt; 0 ">
+                                <t t-if="account['balance'] &gt; 0 ">
                                      <t t-set="total_debits" t-value="total_debits + abs(account['balance']) " />
-                                    <span t-att-style="style" t-esc="abs(account['balance'])" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <!-- See: https://pyformat.info/ -->
+                                    <span t-att-style="style" t-esc="'{:,.2f}'.format(abs(account['balance']))" />
                                 </t>
                             </td>
                             <td class="text-right">
-                                <t t-if="account['balance'] &gt; 0 ">
+                                <t t-if="account['balance'] &lt; 0 ">
                                     <t t-set="total_credits" t-value="total_credits + abs(account['balance']) " />
-                                    <span t-att-style="style" t-esc="abs(account['balance'])" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <span t-att-style="style"  t-esc="'{:,.2f}'.format(abs(account['balance']))"  />
                                 </t>
                             </td>
                         </tr>
