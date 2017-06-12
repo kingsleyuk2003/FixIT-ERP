@@ -66,6 +66,17 @@ class SaleOrderExtend(models.Model):
             self.update({'pricelist_id':pricelist_ou[0].id,'team_id':sales_team_ou[0].id})
 
 
+    @api.multi
+    def action_approve(self):
+        res = super(SaleOrderExtend,self).action_approve()
+
+        #check if all sales order line are services
+        for order in self :
+            is_service_consumable = all([line.product_id.type != 'product' for line in order.order_line])
+            if is_service_consumable :
+                self.create_customer_invoice()
+        return res
+
 
     @api.multi
     def copy(self, default=None):
@@ -258,14 +269,11 @@ class SaleOrderExtend(models.Model):
 
     @api.multi
     def action_cancel(self):
-        #delete draft invoices, else invoice wil raise error
+        #Deletes draft invoices
         self.invoice_ids.unlink()
-        unqualified_picks = 0
         for picking in self.picking_ids:
-            if picking.state <> 'draft' and picking.state != 'confirmed':
-                unqualified_picks += 1
-        if unqualified_picks == 0:
-            self.picking_ids.unlink()
+            if picking.state == 'done' :
+                raise UserError(_('The Delivery order is done already'))
 
         res = super(SaleOrderExtend,self).action_cancel()
         return res
@@ -458,6 +466,20 @@ class SaleOrderExtend(models.Model):
         return res
 
 
+    @api.depends('amount_untaxed')
+    def _compute_markup_margin(self):
+        self.ensure_one()
+        for order in self:
+            if order.amount_untaxed != 0 :
+                total_profit = order.margin
+                untaxed_amt = order.amount_untaxed
+                self.total_gross_margin_perc = (total_profit / untaxed_amt) * 100
+                total_cost = untaxed_amt - total_profit
+                if total_cost != 0 :
+                    self.total_markup_perc = (total_profit / total_cost) * 100
+                self.total_cost = total_cost
+
+
 
     show_alert_box  = fields.Boolean(string="Show Alert Box")
     amt_discount_total = fields.Monetary(string='Discounts', store=True, readonly=True, compute='_amount_all')
@@ -467,12 +489,17 @@ class SaleOrderExtend(models.Model):
     date_quote = fields.Datetime(string='Quote Date',  required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
     so_name = fields.Char('SO Name')
     quote_name = fields.Char('Quote Name')
+    total_cost = fields.Monetary(string='Total Cost', compute='_compute_markup_margin')
+    total_gross_margin_perc = fields.Float(string='Gross Margin(%)', digits_compute= dp.get_precision('Product Price'), compute='_compute_markup_margin')
+    total_markup_perc = fields.Float(string='Markup(%)',digits_compute= dp.get_precision('Product Price'), compute='_compute_markup_margin')
 
     credit = fields.Monetary(string='Total Receivable',related='partner_id.credit', store=True)
     not_due_amount_receivable = fields.Monetary(string='Not Due',related='partner_id.not_due_amount_receivable',store=True)
     due_amount_receivable = fields.Monetary(string='Due', related='partner_id.due_amount_receivable',store=True)
     credit_limit = fields.Monetary(string='Credit Limit', related='partner_id.credit_limit',  track_visibility='onchange', store=True)
     allowed_credit = fields.Float(string='Remaining Credit Allowed', related='partner_id.allowed_credit',store=True)
+
+
 
     state = fields.Selection([
         ('draft', 'Quotation'),

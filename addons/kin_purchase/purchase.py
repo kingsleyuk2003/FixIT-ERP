@@ -12,10 +12,32 @@ from urllib import urlencode
 from urlparse import urljoin
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError, Warning
+from openerp.tools import amount_to_text
 
 
 class PurchaseOrderExtend(models.Model):
     _inherit = 'purchase.order'
+
+    @api.model
+    def _default_note(self):
+        return self.env.user.company_id.po_note
+
+    @api.multi
+    def amount_to_text(self, amt, currency=False):
+        big = ''
+        small = ''
+        if currency.name == 'NGN':
+            big = 'Naira'
+            small = 'kobo'
+        elif currency.name == 'USD':
+            big = 'Dollar'
+            small = 'Cent'
+        else:
+            big = 'Naira'
+            small = 'kobo'
+
+        amount_text = amount_to_text(amt, currency).replace('euro', big).replace('Cent', small)
+        return str.upper('**** ' + amount_text + '**** ONLY')
 
 
     @api.depends('order_line.price_total')
@@ -152,6 +174,7 @@ class PurchaseOrderExtend(models.Model):
         for order in self:
             if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
                 res = order._prepare_picking()
+                res.update({'vend_ref':order.partner_ref})
                 picking = self.env['stock.picking'].create(res)
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])\
                     ._create_stock_moves(picking)
@@ -283,6 +306,7 @@ class PurchaseOrderExtend(models.Model):
     date_rfq = fields.Datetime('RFQ Date', required=True, states=READONLY_STATES, select=True, copy=False, default=fields.Datetime.now)
     po_name = fields.Char('PO Name')
     rfq_name = fields.Char('RFQ Name')
+    notes = fields.Text('Terms and conditions', default=_default_note)
 
 class PurchaseShippingTerms(models.Model):
     _name = 'purchase.shipping.term'

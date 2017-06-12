@@ -18,7 +18,9 @@
                                     <field name="inv_note" />
                                     <!--<field name="logo_text"  />-->
                                     <field name="html_after_header" />
-
+                                </group>
+                                <group string="Others" >
+                                    <field name="is_show_uom" />
                                 </group>
                             </page>
                         </notebook>
@@ -46,6 +48,49 @@
 
                     </field>
         </record>
+
+<!-- Stock Level Excel Report -->
+        <report
+		    id="stock_level_excel_report"
+		    model="stock.level.parser"
+		    string="Stock Level Report"
+		    report_type="xlsx"
+		    name="kin_report.report_stock_level"
+		    file="kin_report.report_stock_level"
+		    attachment_use="False"
+        />
+
+        <report
+		    id="financial_statement_excel_report"
+		    model="financial.statement.parser"
+		    string="Financial Statement Report"
+		    report_type="xlsx"
+		    name="kin_report.report_financial_statement"
+		    file="kin_report.report_financial_statement"
+		    attachment_use="False"
+        />
+
+
+        <report
+		    id="sales_report"
+            model="sales.report.wizard"
+		    string="Sales Excel Report"
+		    report_type="xlsx"
+		    name="kin_report.report_sales_report"
+		    file="kin_report.report_sales_report"
+		    attachment_use="False"
+        />
+
+        <report
+		    id="purchase_report"
+            model="purchase.report.wizard"
+		    string="Purchase Excel Report"
+		    report_type="xlsx"
+		    name="kin_report.report_purchase_report"
+		    file="kin_report.report_purchase_report"
+		    attachment_use="False"
+        />
+
 
 
     </data>

@@ -225,7 +225,7 @@ margin-left: 2px ;
 						<br />
 						<div class="row">
 							<div class="col-xs-12" >
-								<span><b>Comment</b></span>
+								<span><b>Note</b></span>
 								<table  style="width: 100%" class="mt32 table-bordered-black" >
 									<tr>
 										<td style="margin:2px" colspan="4">This is it</td>

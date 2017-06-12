@@ -15,6 +15,12 @@ and cumulative amounts
 * Add partner balance
 * You can send email to one or multiple partners with they debt report
 
+By default all lines of same document are grouped and minimun maturity date of the move line is shown, you can change this behaviur by:
+#. Create / modify parameter "account_debt_management.date_maturity_type" with one of the following values:
+    #. detail: lines will be splitted by maturity date
+    #. max: one line per document, max maturity date shown
+    #. min (default value if no parameter or no matching): one line per document, min maturity date shown.
+
 
 Installation
 ============

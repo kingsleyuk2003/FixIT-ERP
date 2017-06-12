@@ -110,7 +110,8 @@
 													<td style="padding-left: 2px" ><span t-field="line.name"/></td>
 													<td class="text-right">
 														<span t-field="line.quantity"/>
-														<span t-field="line.uom_id" groups="product.group_uom"/>
+														<t t-if="o.company_id.is_show_uom" ><span  t-field="line.uom_id" groups="product.group_uom"/></t>
+
 													</td>
 													<td class="text-right">
 														<span t-field="line.price_unit"/>

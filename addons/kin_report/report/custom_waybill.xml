@@ -112,7 +112,7 @@
 												</td>
 												<td class="text-right">
 													<span t-field="pack_operation.product_qty"/>
-													<span t-field="pack_operation.product_uom_id"/>
+												 	<t t-if="o.company_id.is_show_uom"><span  t-field="pack_operation.product_uom_id"/></t>
 												</td>
 											</tr>
 										</tbody>

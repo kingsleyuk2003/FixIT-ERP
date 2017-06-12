@@ -22,22 +22,22 @@ class StockLevelWizard(models.TransientModel):
     @api.multi
     def stock_excel_report(self):
         context = self.env.context or {}
-        datas = {'name': 'Current Stock Level Report', 'active_ids': context.get('active_ids', [])}
-
-        if context.get('xls_export'):
-            return {
+        wiz_data = self.read([])[0]
+        data = {'name': 'Current Stock Level Report', 'active_ids': context.get('active_ids', [])}
+        data['form'] = {'category_ids' : wiz_data['category_ids'],'stock_location_ids' : wiz_data['stock_location_ids']}
+        return {
                      'name':'Excel Stock Level Report',
                      'type': 'ir.actions.report.xml',
                     'report_name': 'kin_report.report_stock_level',
-                    'datas': datas,
+                    'datas': data,
                     }
-        return True
+
 
 
     name = fields.Char(string='Name'),
     stock_location_ids = fields.Many2many('stock.location', 'stock_wizard_rel', 'stockwizard_id', 'stockloc_id', string='Stock Locations', required=True)
     category_ids = fields.Many2many('product.category', 'prod_category_rel', 'stockwizard_id', 'stockloc_id', string='Product Categories')
-    is_include_zero_qty = fields.Boolean('Include Zero Qty. Stock')
+    # is_include_zero_qty = fields.Boolean('Include Zero Qty. Stock')
 
 
 

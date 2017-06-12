@@ -40,7 +40,8 @@ class AccountPaymentGroup(models.Model):
         states={'draft': [('readonly', False)]},
     )
     partner_type = fields.Selection(
-        [('customer', 'Customer'), ('supplier', 'Vendor')]
+        [('customer', 'Customer'), ('supplier', 'Vendor')],
+        track_visibility='always',
     )
     partner_id = fields.Many2one(
         'res.partner',
@@ -48,6 +49,7 @@ class AccountPaymentGroup(models.Model):
         required=True,
         readonly=True,
         states={'draft': [('readonly', False)]},
+        track_visibility='always',
     )
     commercial_partner_id = fields.Many2one(
         related='partner_id.commercial_partner_id',
@@ -60,6 +62,7 @@ class AccountPaymentGroup(models.Model):
         default=lambda self: self.env.user.company_id.currency_id,
         readonly=True,
         states={'draft': [('readonly', False)]},
+        track_visibility='always',
     )
     payment_date = fields.Date(
         string='Payment Date',
@@ -105,9 +108,14 @@ class AccountPaymentGroup(models.Model):
         for rec in self:
             if rec.state != 'posted':
                 continue
-            rec.matched_amount = sum(rec.matched_move_line_ids.with_context(
-                payment_group_id=rec.id).mapped(
-                    'payment_group_matched_amount'))
+            # damos vuelta signo porque el payments_amount tmb lo da vuelta,
+            # en realidad porque siempre es positivo y se define en funcion
+            # a si es pago entrante o saliente
+            sign = rec.partner_type == 'supplier' and -1.0 or 1.0
+            rec.matched_amount = sign * sum(
+                rec.matched_move_line_ids.with_context(
+                    payment_group_id=rec.id).mapped(
+                        'payment_group_matched_amount'))
             rec.unmatched_amount = rec.payments_amount - rec.matched_amount
 
     selected_finacial_debt = fields.Monetary(
@@ -138,11 +146,13 @@ class AccountPaymentGroup(models.Model):
         # string='Total To Pay Amount',
         readonly=True,
         states={'draft': [('readonly', False)]},
+        track_visibility='always',
     )
 
     payments_amount = fields.Monetary(
         compute='_compute_payments_amount',
         string='Amount',
+        track_visibility='always',
     )
     # name = fields.Char(
     #     readonly=True,
@@ -155,7 +165,8 @@ class AccountPaymentGroup(models.Model):
         ('posted', 'Posted'),
         # ('sent', 'Sent'),
         # ('reconciled', 'Reconciled')
-    ], readonly=True, default='draft', copy=False, string="Status"
+    ], readonly=True, default='draft', copy=False, string="Status",
+        track_visibility='onchange',
     )
     move_lines_domain = (
         "["
@@ -245,20 +256,37 @@ class AccountPaymentGroup(models.Model):
 
     @api.one
     def _compute_matched_move_line_ids(self):
-        # code taken from odoo core
-        # TODO mejorar esta funcion buscando directamente en las partial
-        # reconcile
-        ids = []
-        for aml in self.payment_ids.mapped('move_line_ids'):
-            if aml.account_id.reconcile:
-                ids.extend(
-                    [r.debit_move_id.id for r in aml.matched_debit_ids] if
-                    aml.credit > 0 else [
-                        r.credit_move_id.id for r in aml.matched_credit_ids])
-                # this is the payment line, we dont want it
-                # ids.append(aml.id)
-        self.matched_move_line_ids = self.env['account.move.line'].browse(
-            list(set(ids)))
+        """
+        Lar partial reconcile vinculan dos apuntes con credit_move_id y
+        debit_move_id.
+        Buscamos primeros todas las que tienen en credit_move_id algun apunte
+        de los que se genero con un pago, etnonces la contrapartida
+        (debit_move_id), son cosas que se pagaron con este pago. Repetimos
+        al revz (debit_move_id vs credit_move_id)
+        """
+
+        lines = self.move_line_ids.browse()
+        # not sure why but self.move_line_ids dont work the same way
+        payment_lines = self.payment_ids.mapped('move_line_ids')
+
+        # este metodo deberia ser mas eficiente que el de abajo
+        reconciles = self.env['account.partial.reconcile'].search([
+            ('credit_move_id', 'in', payment_lines.ids)])
+        lines |= reconciles.mapped('debit_move_id')
+
+        reconciles = self.env['account.partial.reconcile'].search([
+            ('debit_move_id', 'in', payment_lines.ids)])
+        lines |= reconciles.mapped('credit_move_id')
+
+        # otro metodo, tal vez mas claro pero menos eficiente
+        # for aml in payment_lines:
+        #     if aml.account_id.reconcile:
+        #         if aml.credit > 0:
+        #             lines |= aml.matched_debit_ids.mapped('debit_move_id')
+        #         else:
+        #             lines |= aml.matched_credit_ids.mapped('credit_move_id')
+
+        self.matched_move_line_ids = lines - payment_lines
 
     payment_difference = fields.Monetary(
         compute='_compute_payment_difference',

@@ -16,7 +16,11 @@ Report Modifications
     'website': 'http://kinsolve.com',
     'depends': ['base','sale','kin_sales','purchase','kin_purchase','account','kin_account','stock','kin_stock','report_xlsx','operating_unit','account_payment_group','kin_account_payment_group'],
     'data': [
+        'data/account_data.xml',
         'wizard/stock_level_wizard_view.xml',
+        'wizard/financial_statement_report_wizard_view.xml',
+        'wizard/sales_report_wizard_view.xml',
+        'wizard/purchase_report_wizard_view.xml',
         'report/custom_report_layouts.xml',
         'report/custom_rfq.xml',
         'report/custom_purchase_order.xml',

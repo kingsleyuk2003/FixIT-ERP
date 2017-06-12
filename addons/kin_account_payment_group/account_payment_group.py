@@ -12,6 +12,14 @@ from openerp.tools import amount_to_text
 class AccountPaymentGroupExtend(models.Model):
     _inherit = 'account.payment.group'
 
+    @api.multi
+    def get_references(self):
+        pay_list = []
+        payment_ids = self.payment_ids
+        for pay_line in payment_ids:
+            if pay_line.ref_no:
+                pay_list.append(pay_line.ref_no)
+        return ', '.join(pay_list)
 
     @api.multi
     def get_paid_invoices(self):

@@ -8,8 +8,8 @@
                 <form string="Stock Level Wizard" >
                   <label string="This wizard will help  generate the .xls file for the current stock level" />
                      <group col="4" colspan="4" >
-                            <field name="stock_location_ids" widget="many2many_tags" />
-                            <field name="is_include_zero_qty"  />
+                            <field name="stock_location_ids" widget="many2many_tags" domain="[('usage','=','internal')]" />
+
                     </group>
                     <notebook colspan="4">
                         <page string="Product Category">
@@ -21,7 +21,7 @@
                         </page>
                     </notebook>
                         <footer>
-                            <button default_focus="1" icon="gtk-execute" name="stock_excel_report" string="Export as Excel" type="object" context="{'xls_export':1}" colspan="2" class="oe_highlight" />
+                            <button default_focus="1" icon="gtk-execute" name="stock_excel_report" string="Export as Excel" type="object"  colspan="2" class="oe_highlight" />
                             or <button special="cancel" class="oe_link"  string="Cancel"  />
                         </footer>
                 </form>
@@ -39,15 +39,7 @@
             <field name="target">new</field>
         </record>
 
-        <report
-		    id="stock_level_excel_report"
-		    model="product.template"
-		    string="Stock Level Report"
-		    report_type="xlsx"
-		    name="kin_report.report_stock_level"
-		    file="kin_report.report_stock_level"
-		    attachment_use="False"
-        />
+
 
          <menuitem id="menu_stock_level_excel" name="Stock Level Excel Report" parent="stock.menu_stock_warehouse_mgmt" sequence="4" action="action_stock_level_wizard" icon="STOCK_PRINT" />
    </data>

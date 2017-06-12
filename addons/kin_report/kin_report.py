@@ -36,6 +36,7 @@ class ResCompanyReport(models.Model):
     po_note = fields.Text(string='Purchase Order Note', help="e.g. Terms and Conditions")
     inv_note = fields.Text(string='Invoice Note', help="e.g. Terms and Conditions")
     html_after_header = fields.Html('Html after Header')
+    is_show_uom = fields.Boolean(string="Show Unit of Measure on Reports")
 
 
 

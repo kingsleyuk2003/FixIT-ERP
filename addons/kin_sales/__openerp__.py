@@ -14,7 +14,7 @@ Sales Modifications.
 """,
     'author': 'Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)',
     'website': 'http://kinsolve.com',
-    'depends': ['base','sale','account','sale_margin','sales_team','sale_stock','purchase_request'],
+    'depends': ['base','sale','account','sale_margin','sales_team','sale_stock','purchase_request','sale_operating_unit'],
     'data': [
 
         'security/security.xml',
