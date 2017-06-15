@@ -168,6 +168,9 @@
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/src/css/full.css" />
                     <t t-raw="head or ''"/>
+        <!-- Sumo Script Start Here -->
+<script src="//load.sumome.com/" data-sumo-site-id="37ea674634e0154107a281eba22885609f49fda993fa658d1d3e85ecad5ae715" async="async"></script>
+<!-- Sumo Script Start Ends Here -->
                 </head>
                 <body t-att-class="body_classname">
                     <t t-raw="0"/>
