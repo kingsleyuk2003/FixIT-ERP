@@ -38,6 +38,7 @@
                 </xpath>
                 <field name="address_home_id" position="after" >
                     <field name="personal_email" />
+                    <field name="personal_mobile" />
                 </field>
             </field>
         </record>

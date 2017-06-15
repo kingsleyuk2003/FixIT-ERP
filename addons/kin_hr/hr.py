@@ -60,3 +60,4 @@ class hrExtend(models.Model):
     guarantor_ids = fields.One2many('guarantor','employee_id', string='Guarantor(s)')
     qualification_ids = fields.One2many('qualification', 'employee_id', string='Guarantor(s)')
     personal_email = fields.Char(string='Personal Email')
+    personal_mobile = fields.Char(related='user_id.mobile',string='Personal Mobile')
