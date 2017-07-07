@@ -17,6 +17,7 @@ Product Modifications
     'depends': ['base','product','stock','operating_unit'],
     'data': [
          'security/security.xml',
+        'security/ir.model.access.csv',
         'cron_data.xml',
         'product.xml',
         'mail_template.xml',

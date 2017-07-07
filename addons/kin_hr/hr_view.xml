@@ -152,6 +152,7 @@
                 <form string="Qualification" >
                     <group>
                         <field name="qualification_title_id" />
+                        <field name="qualification_year" />
                          <field name="school_id" />
                     </group>
                 </form>
@@ -164,6 +165,7 @@
             <field name="arch" type="xml" >
                 <tree string="Qualification Tree">
                     <field name="qualification_title_id" />
+                    <field name="qualification_year" />
                     <field name="school_id" />
                 </tree>
             </field>

@@ -25,7 +25,9 @@ class Qualification(models.Model):
 
     qualification_title_id = fields.Many2one('qualification.title',string='Title')
     school_id = fields.Many2one('school.attended',string='Name of Institution')
+    qualification_year = fields.Char(string='Qualification Year')
     employee_id = fields.Many2one('hr.employee', string='Employee')
+
 
 
 class Guarantor(models.Model):
@@ -58,6 +60,13 @@ class hrExtend(models.Model):
     employment_date = fields.Date('Employment Date')
     employment_status = fields.Selection([('confirmed', 'Confirmed'), ('probation', 'Probation')], string='Employment Status')
     guarantor_ids = fields.One2many('guarantor','employee_id', string='Guarantor(s)')
-    qualification_ids = fields.One2many('qualification', 'employee_id', string='Guarantor(s)')
+    qualification_ids = fields.One2many('qualification', 'employee_id', string='Qualification(s)')
     personal_email = fields.Char(string='Personal Email')
     personal_mobile = fields.Char(related='user_id.mobile',string='Personal Mobile')
+
+
+
+class hrContractExtend(models.Model):
+    _inherit = 'hr.contract'
+
+

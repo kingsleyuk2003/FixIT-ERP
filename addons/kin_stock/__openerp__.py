@@ -14,7 +14,7 @@ Kincotech Customization
 """,
     'author': 'Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)',
     'website': 'http://kinsolve.com',
-    'depends': ['base','stock','sale_stock','account','mail','purchase','kin_purchase','kin_account','kin_sales','account_analytic_default'],
+    'depends': ['base','stock','sale_stock','account','stock_account','mail','purchase','kin_purchase','kin_account','kin_sales','account_analytic_default'],
     'data': [
         'security/security.xml',
         'wizard/picking_rejected.xml',

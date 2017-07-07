@@ -757,16 +757,16 @@ class SaleOrderLine(models.Model):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    @api.model
-    def create(self,vals):
-        is_customer = vals.get('customer',False)
-        is_supplier = vals.get('supplier',False)
-        if is_customer :
-            vals['ref'] = self.env['ir.sequence'].get('cust_id_code')
-        elif is_supplier :
-            vals['ref'] = self.env['ir.sequence'].get('supp_id_code')
-
-        return super(ResPartner,self).create(vals)
+    # @api.model
+    # def create(self,vals):
+    #     is_customer = vals.get('customer',False)
+    #     is_supplier = vals.get('supplier',False)
+    #     if is_customer :
+    #         vals['ref'] = self.env['ir.sequence'].get('cust_id_code')
+    #     elif is_supplier :
+    #         vals['ref'] = self.env['ir.sequence'].get('supp_id_code')
+    #
+    #     return super(ResPartner,self).create(vals)
 
 # Reference: odoo community aged partner code for getting due amount
     def _get_not_due_amount_receivable(self):

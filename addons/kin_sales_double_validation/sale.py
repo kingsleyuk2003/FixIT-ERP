@@ -272,6 +272,9 @@ class SaleOrderExtend(models.Model):
 
                 #self.message_post( _('Sales Order has been created %s.') % (self.name),subject='Please See the Created Sales Order', subtype='mail.mt_comment')
 
+    partner_id = fields.Many2one(states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'to_accept': [('readonly', False)], 'waiting': [('readonly', False)], 'so_to_approve': [('readonly', False)]})
+    partner_invoice_id = fields.Many2one(states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'to_accept': [('readonly', False)], 'waiting': [('readonly', False)], 'so_to_approve': [('readonly', False)]}, track_visibility='always')
+    partner_shipping_id = fields.Many2one(states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'to_accept': [('readonly', False)], 'waiting': [('readonly', False)], 'so_to_approve': [('readonly', False)]}, track_visibility='always')
 
     #state = fields.Selection(selection_add=[('waiting', 'Waiting Approval')]) # it worked but , i could not sequence it
     state = fields.Selection([

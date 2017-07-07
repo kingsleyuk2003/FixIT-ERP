@@ -7,7 +7,7 @@
             web_icon="sale,static/description/icon.png"
             groups="kin_sales.group_show_sale_menu" sequence="6"/>
 
-<record id="crm_team_view_form_extend" model="ir.ui.view">
+        <record id="crm_team_view_form_extend" model="ir.ui.view">
             <field name="name">crm.team.form.extend</field>
             <field name="model">crm.team</field>
             <field name="inherit_id" ref="sales_team.crm_team_view_form" />

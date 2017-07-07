@@ -5,16 +5,158 @@
 # License: see https://www.gnu.org/licenses/lgpl-3.0.en.html
 
 
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from openerp import api, fields, models, _
 from urllib import urlencode
 from urlparse import urljoin
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
+
+
+
+
+
+class produce_price_sale_history(models.Model):
+    """
+    Keep track of the ``product.template`` standard prices as they are changed.
+    """
+
+    _name = 'product.sale.price.history'
+    _rec_name = 'datetime'
+    _order = 'datetime desc'
+
+
+    company_id = fields.Many2one('res.company', required=True,default=lambda self: self.env.user.company_id.id, string='Company')
+    product_id =  fields.Many2one('product.product', 'Product', required=True, ondelete='cascade')
+    datetime = fields.Datetime('Date', default=lambda self: datetime.today().strftime('%Y-%m-%d %H:%M:%S') )
+    price =  fields.Float('Sale Price')
+    pricelist_id = fields.Many2one('product.pricelist',string='Price List')
+    user_id = fields.Many2one('res.users', string='Last Changed By')
+    date_change = fields.Datetime(string='Last Changed Date')
+    prev_price = fields.Float(string='Previous Price')
+
+
+
+class ProductProductExtend(models.Model):
+    _inherit = 'product.product'
+
+    @api.model
+    def create(self, vals):
+        context = self.env.context
+        ctx = dict(context or {}, create_product_product=True)
+        product_id = super(ProductProductExtend, self).with_context(ctx).create(vals)
+        self.with_context(ctx)._set_sales_price(product_id, vals.get('list_price', 0.0))
+        return product_id
+
+    @api.multi
+    def write(self,vals):
+        res = super(ProductProductExtend, self).write(vals)
+        if 'list_price' in vals:
+            for product_id in self:
+                self._set_sales_price(product_id, vals.get('list_price', 0.0))
+        return res
+
+
+    def _set_sales_price(self, product_id, value):
+        ctx = self.env.context or {}
+        price_cost_history_obj = self.env['product.sale.price.history']
+        user_company = self.env.user.company_id.id
+        company_id = ctx.get('force_company', user_company)
+        user = self.env.user.id
+        date = datetime.today()
+        prev_price = self.fixed_price
+        price_cost_history_obj.with_context(ctx).create(
+                {
+                'product_id': product_id.id,
+                'price': value,
+                'company_id': company_id,
+                'user_id': user,
+                'date_change': date,
+                'prev_price': prev_price
+                }
+        )
+
+
+
+
+    product_cost_price_history_ids = fields.One2many('product.price.history','product_id',string='Product Price History')
+    product_sale_price_history_ids = fields.One2many('product.sale.price.history', 'product_id', string='Product Sales Price History')
+
+
+
 
 
 class ProductPricelistExtend(models.Model):
+
     _inherit = 'product.pricelist'
 
     operating_unit_id = fields.Many2one('operating.unit',string='Operating Unit')
+
+
+class PricelistItem(models.Model):
+
+    _inherit = 'product.pricelist.item'
+
+    user_id = fields.Many2one('res.users',string='Last Changed By')
+    date_change = fields.Datetime(string='Last Changed Date')
+    prev_price = fields.Float(string='Previous Price')
+    applied_on = fields.Selection([('3_global', 'Global'), ('2_product_category', ' Product Category'), ('0_product_variant', 'Product Variant')], string="Apply On", required=True, help='Pricelist Item applicable on selected option')
+
+
+    @api.model
+    def create(self, vals):
+        user = self.env.user.id
+        date = datetime.today()
+        vals.update({'user_id':user,'date_change':date})
+        res = super(PricelistItem,self).create(vals)
+        product_id = vals.get('product_id', False)
+        fixed_price = vals.get('fixed_price',0)
+        pricelist_id = vals.get('pricelist_id',False)
+        if product_id and fixed_price > 0 and pricelist_id :
+            self._set_sales_price(product_id,fixed_price,pricelist_id)
+        return res
+
+    @api.multi
+    def write(self, vals):
+        user = self.env.user.id
+        date = datetime.today()
+        fixed_price = vals.get('fixed_price', False)
+        prev_price = self.fixed_price
+        vals.update({'user_id': user, 'date_change': date})
+        product_id = vals.get('product_id', False)
+        if not product_id:
+            product_id = self.product_id.id or False
+        if product_id and fixed_price != False :
+            fixed_price = prev_price
+        if fixed_price != False:
+            vals.update({'prev_price':prev_price})
+            pricelist_id = self.pricelist_id or False
+            if product_id and pricelist_id:
+                self._set_sales_price(product_id, fixed_price, pricelist_id.id)
+
+        res = super(PricelistItem, self).write(vals)
+        return res
+
+
+    def _set_sales_price(self, product_id, value,pricelist_id):
+        ctx = self.env.context or {}
+        price_cost_history_obj = self.env['product.sale.price.history']
+        user_company = self.env.user.company_id.id
+        company_id = ctx.get('force_company', user_company)
+        user = self.env.user.id
+        date = datetime.today()
+        prev_price = self.fixed_price
+        price_cost_history_obj.with_context(ctx).create(
+                {
+                'product_id': product_id,
+                'price': value,
+                'company_id': company_id,
+                'user_id': user,
+                'date_change': date,
+                'prev_price': prev_price,
+                 'pricelist_id': pricelist_id,
+                }
+        )
 
 
 class ProductTemplateExtend(models.Model):

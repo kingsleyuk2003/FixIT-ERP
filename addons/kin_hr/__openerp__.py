@@ -18,10 +18,11 @@ For Help in Customization: Contact Kingsley Okonkwo on +2348030412562 or email a
 """,
     'author': 'Kinsolve Solutions',
     'website': 'http://kinsolve.com',
-    'depends': ['base','hr'],
+    'depends': ['base','hr','hr_payroll'],
     'data': [
         'security/ir.model.access.csv',
         'hr_view.xml',
+        'report/custom_payslip.xml',
     ],
     'test':[],
     'installable': True,

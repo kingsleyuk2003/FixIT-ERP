@@ -14,7 +14,7 @@ Purchase Modifications
 """,
     'author': 'Kingsley Okonkwo (kingsley@kinsolve.com, +2348030412562)',
     'website': 'http://kinsolve.com',
-    'depends': ['base','purchase','purchase_request'],
+    'depends': ['base','purchase','purchase_request','product'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',

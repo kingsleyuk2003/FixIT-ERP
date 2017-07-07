@@ -12,10 +12,9 @@ from urllib import urlencode
 from urlparse import urljoin
 from openerp.tools import float_is_zero, float_compare, float_round, DEFAULT_SERVER_DATETIME_FORMAT
 import time
+from datetime import datetime
 from psycopg2 import OperationalError
 import openerp
-
-
 
 
 
@@ -30,6 +29,10 @@ class StockPicking(models.Model):
         po_ref = vals.get('po_ref',False)
         if po_ref :
             vals['shipment_ref'] = po_ref
+
+        vend_ref = vals.get('vend_ref', False)
+        if vend_ref:
+            vals['shipment_ref'] = vend_ref
         res = super(StockPicking,self).create(vals)
         return res
 
@@ -529,6 +532,8 @@ class StockPicking(models.Model):
                 'partner_bank_id' : partn.bank_ids and partn.bank_ids.ids[0] or False ,
                 'journal_id':default_journal_id.id ,
                 'origin': purchase_order.name,
+                'reference' : self.shipment_ref or purchase_order.partner_ref,
+                'currency_id' : purchase_order.currency_id.id
                 }
 
             purchase_inv = invoice_obj.create(vals)
@@ -538,6 +543,18 @@ class StockPicking(models.Model):
             purchase_inv.purchase_id = False
             return purchase_inv
 
+    @api.multi
+    def unlink(self):
+        res = super(StockPicking, self).unlink()
+        for rec in self:
+            try:
+                if rec.name:
+                    raise UserError(
+                        _('Cannot delete a picking document with an id. You may reuse the document or cancel it'))
+            except Exception:
+                raise UserError(
+                    _('Cannot delete a picking document with an id. You may reuse the document or cancel it'))
+        return res
 
     @api.multi
     def do_transfer(self):
@@ -1007,6 +1024,7 @@ class StockPicking(models.Model):
     rejection_confirmed_by_user_id = fields.Many2one('res.users', string='Rejected Stock Confirmed By')
     salesperson_id = fields.Many2one('res.users',string="Sales Person", readonly=True)
     show_alert_box  = fields.Boolean(string="Show Alert Box")
+    move_id = fields.Many2one('account.move',string='Journal Entry',readonly=True)
     state = fields.Selection(selection_add=[('shipped', 'Shipped'),('delivered', 'Delivered'),('rejected', 'Rejected')])
 
 
@@ -1186,13 +1204,36 @@ class StockPackOperation(models.Model):
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
+
+    def _create_account_move_line(self, cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=None):
+        # group quants by cost
+        quant_cost_qty = {}
+        for quant in quants:
+            if quant_cost_qty.get(quant.cost):
+                quant_cost_qty[quant.cost] += quant.qty
+            else:
+                quant_cost_qty[quant.cost] = quant.qty
+        move_obj = self.pool.get('account.move')
+        for cost, qty in quant_cost_qty.items():
+            move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id,
+                                                         context=context)
+            date = context.get('force_period_date', datetime.today().strftime('%Y-%m-%d'))
+            new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
+                                                 'line_ids': move_lines,
+                                                 'date': date,
+                                                 'ref': move.picking_id.name,
+                                                 'picking_id': move.picking_id.id }, context=context)
+            move_obj.post(cr, uid, [new_move], context=context)
+
+
+
     @api.depends('inventory_value','qty')
     def _compute_unit_cost1(self):
         for rec in self :
             rec.cost1 = rec.inventory_value /  rec.qty
 
     cost1 = fields.Float(string='Unit Cost',compute="_compute_unit_cost1" )
-    cost_price = fields.Float(string="Initial Unit Cost", type='float', readonly=True)
+    cost_price = fields.Float(string="Historical Cost", type='float', readonly=True)
     product_category_id = fields.Many2one('product.category',related='product_id.categ_id', store=True)
 
 
@@ -1502,6 +1543,32 @@ class ProcurementOrderExtend(models.Model):
     #         cr.commit()
     #         cr.close()
     #     return {}
+
+
+class AccountMoveStockExtend(models.Model):
+    _name = 'account.move'
+    _inherit = ['account.move','mail.thread']
+
+
+    @api.model
+    def create(self, vals):
+        res = super(AccountMoveStockExtend,self).create(vals)
+        picking_id = vals.get('picking_id', False)
+
+        if picking_id:
+            picking_obj = self.env['stock.picking'].browse(picking_id)
+            picking_obj.move_id = res.id
+
+        return res
+
+    picking_id = fields.Many2one('stock.picking', string="Inventory Transfer", track_visibility='onchange',
+                                 readonly=True)
+
+
+class AccountMoveLineExtend(models.Model):
+    _inherit = 'account.move.line'
+
+    picking_id = fields.Many2one(related='move_id.picking_id',string="Inventory Transfer",  store=True)
 
 
 
